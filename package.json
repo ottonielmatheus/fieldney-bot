@@ -1,0 +1,14 @@
+{
+  "name": "fieldney-bot",
+  "version": "1.0.0",
+  "description": "A github bot for field-control org to help some work tasks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
