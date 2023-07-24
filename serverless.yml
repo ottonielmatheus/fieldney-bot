@@ -1,0 +1,18 @@
+service: sls-fieldney-bot
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: sa-east-1
+  memorySize: 128
+  timeout: 3
+
+functions:
+  index:
+    handler: index.handler
+    description: fieldney-bot webhook
+    events:
+      - http:
+          path: /probot
+          method: post
