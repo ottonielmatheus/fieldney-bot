@@ -1,0 +1,19 @@
+{
+	"id": "cmpl-7gNTMs1qw9ZeYUc8fUb2Qy58XHUiO",
+	"object": "text_completion",
+	"created": 1690334360,
+	"model": "text-davinci-003",
+	"choices": [
+		{
+			"text": "\n\nAssunto: Atualizações da Base de Código da Field Control\n\nPrezados Fielders,\n\nEstamos empolgados para compartilhar as mais recentes atualizações na Base de Código da Field Control. Estamos expandindo nosso sistema para melhorar a produtividade de nossos usuários e nos aproximar aos nossos objetivos de negócios.\n\nContexto:\n\nEstamos fazendo uma atualização no repositório de código da Field Control. Esta atualização é para permitir que o código seja reutilizado por outros usuários. Estes recursos permitirão que os Fielders criem uma documentação clara e eficiente, bem como fornecer um código mais otimizado para uso futuro.\n\nMotivações:\n\nEstamos atualizando o repositório de código da Field Control para melhorar a facilidade de uso e introspecção dos nossos recursos. Estas mudanças nos permitirão desenvolver novos recursos de maneira mais ágil e ter os melhores padrões de código possíveis.\n\nImplementação:\n\nEstamos fazendo commit em uma nova versão do repositório da Field Control. Devemos garantir que o código atual seja refatorado e melhorado com novas ferramentas. Desse modo, deverá ser mais intuitivo para os desenvolvedores trabalharem com ele e permitirá que novas iteratividades sejam realizadas de forma mais rápida.\n\nEvolução:\n\nEsta implementação melhorará significativamente a facilidade de uso e a qualidade de nossas ferramentas. Estamos trabalhando para trazer novos recursos e melhorar a experiêcia dos usuários. A geração de documentação e evidencias de código também serão muito mais efetivas, pois certas coisas não mais serão necessárias para a verificação de código, pois tudo já estará pronto para uso.\n\nAproveite os frutos da nossa atualização e fique ligado para mais atualizações no futuro.\n\nAtenciosamente, \nEquipe de Desenvolvimento da Field Control",
+			"index": 0,
+			"logprobs": null,
+			"finish_reason": "stop"
+		}
+	],
+	"usage": {
+		"prompt_tokens": 316,
+		"completion_tokens": 677,
+		"total_tokens": 993
+	}
+}

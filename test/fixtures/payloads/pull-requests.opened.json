@@ -1,0 +1,17 @@
+{
+  "action": "opened",
+  "repository": {
+    "description": "Repository description",
+    "owner": {
+      "login": "ottonielmatheus"
+    },
+    "name": "fieldney-bot"
+  },
+  "pull_request": {
+    "number": 9,
+    "body": "<implementation>Pull request description</implementation>",
+    "user": {
+      "login": "ottonielmatheus"
+    }
+  }
+}

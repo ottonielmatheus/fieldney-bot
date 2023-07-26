@@ -1,4 +1,5 @@
 service: sls-fieldney-bot
+useDotenv: true
 
 provider:
   name: aws
@@ -12,6 +13,15 @@ functions:
   index:
     handler: index.handler
     description: fieldney-bot webhook
+
+    environment:
+      APP_ID: ${env:APP_ID}
+      WEBHOOK_SECRET: ${env:WEBHOOK_SECRET}
+      PRIVATE_KEY: ${env:PRIVATE_KEY}
+      OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+      OPENAI_ORG: ${env:OPENAI_ORG}
+      LOG_FORMAT: json
+
     events:
       - http:
           path: /probot
