@@ -7,7 +7,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: sa-east-1
   memorySize: 128
-  timeout: 3
+  timeout: 15
 
 functions:
   index:
