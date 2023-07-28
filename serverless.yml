@@ -8,13 +8,7 @@ provider:
   region: sa-east-1
   memorySize: 128
   timeout: 15
-
-functions:
-  index:
-    handler: index.handler
-    description: fieldney-bot webhook
-
-    environment:
+  environment:
       APP_ID: ${env:APP_ID}
       WEBHOOK_SECRET: ${env:WEBHOOK_SECRET}
       PRIVATE_KEY: ${env:PRIVATE_KEY}
@@ -22,7 +16,21 @@ functions:
       OPENAI_ORG: ${env:OPENAI_ORG}
       LOG_FORMAT: json
 
+functions:
+  github:
+    handler: index.github
+    description: github fieldney-bot webhook
+
     events:
       - http:
-          path: /probot
+          path: hooks/github
+          method: post
+
+  slack:
+    handler: index.slack
+    description: slack fieldney-bot webhook
+
+    events:
+      - http:
+          path: hooks/slack
           method: post

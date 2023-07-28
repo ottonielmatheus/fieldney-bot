@@ -7,6 +7,11 @@
     },
     "name": "fieldney-bot"
   },
+  "organization": {
+    "login":"this-is-just-a-test-org",
+    "id":140672598,
+    "node_id":"O_kgDOCGJ-Vg"
+  },
   "pull_request": {
     "number": 9,
     "body": "<implementation>Pull request description</implementation>",

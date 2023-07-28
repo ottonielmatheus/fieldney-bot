@@ -1,42 +1,32 @@
 const OpenAI = require('../core/integrations/openai')
 const openaiApi = new OpenAI()
 
-function getTopics (context, implementation, motivation) {
-  const implementationRegex = /<implementation>([\s\S]{0,})<\/implementation>/gm
-  motivation = motivation.split('\n\n')[0].trim()
-  implementation = implementationRegex.exec(implementation)[1]
-  implementation = implementation ? implementation.replaceAll('\n', '').trim() : ''
-  return {
-    context,
-    motivation,
-    implementation
-  }
-}
+module.exports = async (context, implementation, motivation, author) => {
+  const prompt =
+    'Comunique um e-mail descolado de uma alteração no código,\n' +
+    'com descrição que deve ser explicativa para o público em geral.\n\n' +
 
-module.exports = async (repoDescription, prDescription, issueDescription) => {
-  const { context, motivation, implementation } = getTopics(repoDescription, prDescription, issueDescription)
-  const prompt = `
-      Comunique um e-mail descolado de uma alteração no código,
-      com descrição que deve ser explicativa para o público em geral.
+    'Será enviado para funcionários internos da empresa Field Control.\n' +
+    'Onde usamos "Fielders" para nos referirmos aos funcionários da empresa.\n\n' +
 
-      Será enviado para funcionários internos da empresa Field Control.
-      Onde usamos "Fielders" para nos referirmos aos funcionários da empresa.
+    'Deve possuir os seguintes tópicos separados:\n\n' +
 
-      Deve possuir os seguintes tópicos separados:
+    'Tópico "**Contexto**", onde o contexto é:\n' +
+    `Como "${motivation}" afeta "${context}".\n\n` +
 
-      Tópico "**Contexto**", onde o contexto é:
-      Como "${motivation}" afeta "${context}".
+    'Tópico "**Motivações**", onde as motivações para essas implementações foram:\n' +
+    `(Melhore esse texto: "${motivation}")\n\n` +
 
-      Tópico "**Motivações**", onde as motivações para essas implementações foram:
-      (Melhore esse texto: "${motivation}")
+    'Tópico "**Implementação**", onde as implementações são:\n' +
+    `(melhore esse texto: "${implementation}")\n\n` +
 
-      Tópico "**Implementação**", onde as implementações são:
-      (melhore esse texto: "${implementation}")
+    'E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.'
 
-      E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.
+  let suggestion = await openaiApi.execPrompt(prompt)
+  suggestion = 'Sugestão de Fieldnews \n' +
+    '------------ \n' +
+    `Salve **@${author.login}**! Aqui vai uma sugestão de Fieldnews quentinha que eu gerei pra você. 💙\n` +
+    'Não se esqueça de revisar! 🚀 \n\n' + suggestion
 
-      Importante: O texto gerado não deve conter tabulações.
-    `
-
-  return openaiApi.execPrompt(prompt)
+  return suggestion
 }

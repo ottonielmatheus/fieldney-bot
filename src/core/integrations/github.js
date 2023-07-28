@@ -1,10 +1,11 @@
 const { ProbotOctokit } = require('probot')
 
 class GitHub {
-  constructor (owner, repository, octokit) {
+  constructor (organization, owner, repository, octokit) {
     this.octokit = octokit || new ProbotOctokit()
     this.owner = owner
     this.repo = repository
+    this.org = organization
   }
 
   async getClosedIssuesNumberByPR (prNumber) {
@@ -19,7 +20,7 @@ class GitHub {
             }
           }
         }
-      }`, { owner: this.owner.login, name: this.repo, prNumber })
+      }`, { owner: this.owner.login, name: this.repo.name, prNumber })
     return repository.pullRequest.closingIssuesReferences.nodes
   }
 
@@ -33,7 +34,7 @@ class GitHub {
           }
         }
       }
-    `, { owner: this.owner.login, name: this.repo, issueNumber })
+    `, { owner: this.owner.login, name: this.repo.name, issueNumber })
     return repository.issue
   }
 
@@ -53,27 +54,66 @@ class GitHub {
             }
           }
         }
-      }`, { owner: this.owner.login, name: this.repo, prNumber })
+      }`, { owner: this.owner.login, name: this.repo.name, prNumber })
     return repository.pullRequest.comments.nodes
   }
 
-  async commentOnPullRequest (prNumber, text) {
-    const comments = await this.getPullRequestComments(prNumber)
-    const botComment = comments.find(comment => comment.author.login === 'fieldney-bot')
+  async getRepoTeams (repoName) {
+    const { organization } = await this.octokit.graphql(`
+      query ($org: String!, $repoName: String!) {
+        organization (login: $org) {
+          teams (first: 20) {
+            nodes {
+              name
+              repositories (query: $repoName) {
+                nodes {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }`, { org: this.org.login, repoName })
+    return organization.teams.nodes.map(team => team.name)
+  }
 
-    if (botComment) {
+  async addOrUpdatePRComment (prNumber, text, where) {
+    const comments = await this.getPullRequestComments(prNumber)
+    const existingComment = comments.find(comment =>
+      comment.author.login === 'fieldney-bot' && comment.body.includes(where)
+    )
+
+    if (existingComment) {
       return this.octokit.issues.updateComment({
-        repo: this.repo,
+        repo: this.repo.name,
         owner: this.owner.login,
-        comment_id: botComment.databaseId,
+        comment_id: existingComment.databaseId,
         body: text
       })
     }
     return this.octokit.issues.createComment({
-      repo: this.repo,
+      repo: this.repo.name,
       owner: this.owner.login,
       issue_number: prNumber,
       body: text
+    })
+  }
+
+  async assignPRTo (prNumber, users) {
+    return this.octokit.issues.addAssignees({
+      repo: this.repo.name,
+      owner: this.owner.login,
+      issue_number: prNumber,
+      assignees: users
+    })
+  }
+
+  async addRepoTeamsReviewers (prNumber, teams) {
+    return this.octokit.pulls.requestReviewers({
+      repo: this.repo.name,
+      owner: this.owner.login,
+      pull_number: prNumber,
+      team_reviewers: teams
     })
   }
 }

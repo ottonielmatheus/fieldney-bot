@@ -1,0 +1,20 @@
+{
+	"data": {
+		"organization": {
+			"teams": {
+				"nodes": [
+					{
+						"name": "Backoffice",
+						"repositories": {
+							"nodes": [
+								{
+									"name": "test-repo"
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}
