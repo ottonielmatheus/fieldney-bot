@@ -4,7 +4,8 @@
   "description": "A github bot for field-control to help and improve some of our workflow tasks",
   "main": "index.js",
   "scripts": {
-    "start": "npx probot run ./src/app/index.js",
+    "start": "npx probot run ./src/github/app/index.js",
+    "start-slack": "node ./src/slack/index.js",
     "test": "jest"
   },
   "author": "",
@@ -22,7 +23,9 @@
   },
   "dependencies": {
     "@probot/adapter-aws-lambda-serverless": "^3.0.3",
+    "@slack/bolt": "^3.13.2",
     "dotenv": "^16.3.1",
+    "lodash": "^4.17.21",
     "openai": "^3.3.0",
     "probot": "^12.3.1"
   }

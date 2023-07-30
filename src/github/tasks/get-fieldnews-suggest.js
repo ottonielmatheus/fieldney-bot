@@ -1,4 +1,4 @@
-const OpenAI = require('../core/integrations/openai')
+const OpenAI = require('../../core/integrations/openai')
 const openaiApi = new OpenAI()
 
 module.exports = async (context, implementation, motivation, author) => {
