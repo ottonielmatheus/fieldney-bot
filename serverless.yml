@@ -15,7 +15,7 @@ provider:
       OPENAI_API_KEY: ${env:OPENAI_API_KEY}
       OPENAI_ORG: ${env:OPENAI_ORG}
       SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
-      SLACK_TOKEN: ${env:SLACK_TOKEN}
+      SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
       LOG_FORMAT: json
 
 functions:
@@ -36,3 +36,6 @@ functions:
       - http:
           path: hooks/slack
           method: post
+
+plugins:
+  - serverless-offline

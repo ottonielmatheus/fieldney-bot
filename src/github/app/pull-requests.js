@@ -34,7 +34,7 @@ const suggestFieldnews = async ({ githubApi, repository, pullRequest }) => {
 
 const notifyHotfixToDevs = async ({ slackApi, repository, pullRequest }) => {
   const author = pullRequest.user?.name || pullRequest.user.login
-  const message = `Guys, *${author}* acabou de subir uma *hotfix* para o *${repository.name}*, ` +
+  const message = `<!channel>, *${author}* acabou de subir uma *hotfix* para o *${repository.name}*, ` +
     'precisamos de review urgente! 🔥🚒\n' + pullRequest.html_url
   await slackApi.chat.postMessage({ channel: 'developers', text: message })
 }

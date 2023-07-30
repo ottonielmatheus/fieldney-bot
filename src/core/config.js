@@ -11,7 +11,7 @@ module.exports = {
     organization: process.env.OPENAI_ORG
   },
   slack: {
-    token: process.env.SLACK_TOKEN,
+    token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET
   }
 }

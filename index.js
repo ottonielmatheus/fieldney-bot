@@ -1,11 +1,11 @@
 const { createLambdaFunction, createProbot } = require('@probot/adapter-aws-lambda-serverless')
-const { awsLambdaReceiver } = require('./src/core/integrations/slack')
-const appFn = require('./src/github/app')
+const githubApp = require('./src/github/app')
+const slackApp = require('./src/slack/app')
 
 module.exports = {
-  github: createLambdaFunction(appFn, { probot: createProbot() }),
+  github: createLambdaFunction(githubApp, { probot: createProbot() }),
   slack: async (event, context, callback) => {
-    const handler = await awsLambdaReceiver.start()
+    const handler = await slackApp.start()
     return handler(event, context, callback)
   }
 }
