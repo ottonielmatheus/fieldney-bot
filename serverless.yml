@@ -14,6 +14,8 @@ provider:
       PRIVATE_KEY: ${env:PRIVATE_KEY}
       OPENAI_API_KEY: ${env:OPENAI_API_KEY}
       OPENAI_ORG: ${env:OPENAI_ORG}
+      SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+      SLACK_TOKEN: ${env:SLACK_TOKEN}
       LOG_FORMAT: json
 
 functions:
