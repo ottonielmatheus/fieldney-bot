@@ -1,0 +1,31 @@
+{
+  "action": "labeled",
+  "repository": {
+    "description": "Repository description",
+    "owner": {
+      "login": "ottonielmatheus"
+    },
+    "name": "fieldney-bot"
+  },
+  "organization": {
+    "login":"this-is-just-a-test-org",
+    "id":140672598,
+    "node_id":"O_kgDOCGJ-Vg"
+  },
+  "pull_request": {
+    "number": 9,
+    "body": "<implementation>Pull request description</implementation>",
+    "user": {
+      "login": "ottonielmatheus"
+    },
+    "html_url": "https://github.com/this-is-just-a-test-org/test-repo/pull/9"
+  },
+  "label": {
+    "id": 5780017048,
+    "node_id": "LA_kwDOKAL3NM8AAAABWIQPmA",
+    "name": "hotfix",
+    "color": "D93F0B",
+    "default": false,
+    "description": "An urgent fix"
+  }
+}
