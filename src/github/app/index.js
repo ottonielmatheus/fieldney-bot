@@ -8,7 +8,12 @@ function middleware (cb) {
 
   return (context) => {
     const { organization, repository } = context.payload
-    const githubApi = new GithubApi(organization, repository.owner, repository, context.octokit)
+    const githubApi = new GithubApi({
+      org: organization,
+      owner: repository.owner,
+      octokit: context.octokit,
+      repository
+    })
     const payload = mapKeys(context.payload, (val, key) => camelCase(key))
     context = { slackApi, githubApi, ...payload }
     return cb(context)

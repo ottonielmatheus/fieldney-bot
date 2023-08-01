@@ -3,8 +3,10 @@ require('dotenv').config()
 module.exports = {
   github: {
     appId: process.env.APP_ID,
-    privateKeyPath: process.env.PRIVATE_KEY_PATH,
-    webhookSecret: process.env.WEBHOOK_SECRET
+    privateKey: process.env.PRIVATE_KEY,
+    webhookSecret: process.env.WEBHOOK_SECRET,
+    installationId: process.env.INSTALLATION_ID,
+    orgName: process.env.GH_ORG_NAME
   },
   openai: {
     apiKey: process.env.OPENAI_API_KEY,

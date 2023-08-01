@@ -1,11 +1,9 @@
-const { ProbotOctokit } = require('probot')
-
 class GitHub {
-  constructor (organization, owner, repository, octokit) {
-    this.octokit = octokit || new ProbotOctokit()
+  constructor ({ org, owner, repository, octokit }) {
     this.owner = owner
     this.repo = repository
-    this.org = organization
+    this.org = org
+    this.octokit = octokit
   }
 
   async getClosedIssuesNumberByPR (prNumber) {
@@ -115,6 +113,77 @@ class GitHub {
       pull_number: prNumber,
       team_reviewers: teams
     })
+  }
+
+  async getProjectItems (projectQuery) {
+    const { organization } = await this.octokit.graphql(`
+      query ($org: String!, $projectQuery: String) {
+        organization (login: $org) {
+          projectsV2 (first: 1, query: $projectQuery) {
+            nodes {
+              title
+              items (first: 20) {
+                nodes {
+                  content {
+                    ... on DraftIssue {
+                      title
+                      assignees (first: 5) {
+                        nodes {
+                          name
+                          login
+                        }
+                      }
+                    }
+                    ... on Issue {
+                      title
+                      assignees (first: 5) {
+                        nodes {
+                          name
+                          login
+                        }
+                      }
+                    }
+                  }
+                  status: fieldValueByName (name: "Status") {
+                    ... on ProjectV2ItemFieldSingleSelectValue {
+                      name
+                      description
+                    }
+                  }
+                  type: fieldValueByName (name: "Tipo") {
+                    ... on ProjectV2ItemFieldSingleSelectValue {
+                      name
+                      description
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`, { org: this.org.login, projectQuery })
+
+    const project = organization.projectsV2.nodes[0]
+    if (!project) {
+      return null
+    }
+
+    const getAssigneeName = (assignee) => assignee.name || assignee.login
+    return {
+      title: project.title,
+      items: project.items.nodes.map(item => ({
+        title: item.content.title,
+        status: {
+          value: item.status.name,
+          description: item.status.description
+        },
+        type: {
+          value: item.type?.name,
+          description: item.type?.description
+        },
+        assignees: item.content.assignees.nodes.map(getAssigneeName)
+      }))
+    }
   }
 }
 

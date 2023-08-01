@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky install",
-    "start": "serverless offline --noPrependStageInUrl",
+    "start": "serverless offline start --noPrependStageInUrl",
     "test": "jest",
     "lint": "npx eslint ."
   },
@@ -21,13 +21,15 @@
     "husky": "^8.0.3",
     "jest": "^29.6.1",
     "nock": "^13.3.2",
-    "serverless-offline": "^12.0.4"
+    "serverless-offline": "^12.0.4",
+    "serverless-offline-watcher": "^1.1.0"
   },
   "dependencies": {
     "@probot/adapter-aws-lambda-serverless": "^3.0.3",
     "@slack/bolt": "^3.13.2",
     "dotenv": "^16.3.1",
     "lodash": "^4.17.21",
+    "octokit": "^3.1.0",
     "openai": "^3.3.0",
     "probot": "^12.3.1"
   }

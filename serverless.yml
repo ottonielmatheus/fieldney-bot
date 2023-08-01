@@ -39,3 +39,9 @@ functions:
 
 plugins:
   - serverless-offline
+  - serverless-offline-watcher
+
+custom:
+  serverless-offline-watcher:
+    - path: 'src/'
+      command: 'echo "app was modified, reloaded!"'

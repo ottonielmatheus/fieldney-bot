@@ -1,13 +1,13 @@
 const nock = require('nock')
-const app = require('../src/github/app')
+const app = require('../../src/github/app')
 const { Probot, ProbotOctokit } = require('probot')
-const payload = require('./fixtures/payloads/pull-requests.opened.json')
-const labeledPayload = require('./fixtures/payloads/pull-requests.labeled.json')
-const orgTeamsResponse = require('./fixtures/responses/org-teams.json')
-const prClosedIssuesResponse = require('./fixtures/responses/pull-requets-closed-issues.json')
-const issueResponse = require('./fixtures/responses/issue.json')
-const fieldnewsSuggestionResponse = require('./fixtures/responses/fieldnews-suggestions.json')
-const pullRequestCommentsResponse = require('./fixtures/responses/pull-request-comments.json')
+const payload = require('../fixtures/payloads/pull-requests.opened.json')
+const labeledPayload = require('../fixtures/payloads/pull-requests.labeled.json')
+const orgTeamsResponse = require('../fixtures/responses/org-teams.json')
+const prClosedIssuesResponse = require('../fixtures/responses/pull-requets-closed-issues.json')
+const issueResponse = require('../fixtures/responses/issue.json')
+const fieldnewsSuggestionResponse = require('../fixtures/responses/fieldnews-suggestions.json')
+const pullRequestCommentsResponse = require('../fixtures/responses/pull-request-comments.json')
 
 describe('Test "pull requests" events', () => {
   let probot
@@ -135,9 +135,9 @@ describe('Test "pull requests" events', () => {
             '(melhore esse texto: "Pull request description")\n' +
             '\n' +
             'E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.<END>',
-          model: 'text-davinci-003',
+          model: 'text-davinci-002',
           temperature: 1,
-          max_tokens: 3024,
+          max_tokens: 524,
           stop: '<END>'
         })
         return true
@@ -285,9 +285,9 @@ describe('Test "pull requests" events', () => {
             '(melhore esse texto: "Pull request description")\n' +
             '\n' +
             'E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.<END>',
-          model: 'text-davinci-003',
+          model: 'text-davinci-002',
           temperature: 1,
-          max_tokens: 3024,
+          max_tokens: 524,
           stop: '<END>'
         })
         return true
@@ -370,7 +370,7 @@ describe('Test "pull requests" events', () => {
       .post('/chat.postMessage', (body) => {
         expect(body).toMatchObject({
           channel: 'developers',
-          text: 'Guys, *ottonielmatheus* acabou de subir uma *hotfix* para o *fieldney-bot*, precisamos de review urgente! 🔥🚒\n' +
+          text: '<!channel>, *ottonielmatheus* acabou de subir uma *hotfix* para o *fieldney-bot*, precisamos de review urgente! 🔥🚒\n' +
             'https://github.com/this-is-just-a-test-org/test-repo/pull/9'
         })
         return true
