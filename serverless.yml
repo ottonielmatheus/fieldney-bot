@@ -16,6 +16,8 @@ provider:
       OPENAI_ORG: ${env:OPENAI_ORG}
       SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
       SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+      INSTALLATION_ID: ${env:INSTALLATION_ID}
+      GH_ORG_NAME: ${env:GH_ORG_NAME}
       LOG_FORMAT: json
 
 functions:

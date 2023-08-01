@@ -1,7 +1,7 @@
-<center>
+<p align="center">
   <img src="./assets/readme/fieldney-resized.png" width="200" height="200">
-  <p>A bot designed to enhance and assist Fielders in their day-to-day tasks within Field Control.</p>
-</center>
+</p>
+<p align="center">A bot designed to enhance and assist Fielders in their day-to-day tasks within Field Control.</p>
 
 # Fieldney Bot
 
@@ -57,6 +57,6 @@ npm start
 
 ---
 
-<center>
-<img src="https://img.shields.io/badge/node-18.17.0-green?style=flat-square">
-</center>
+<p align="center">
+  <img src="https://img.shields.io/badge/node-18.17.0-green?style=flat-square">
+</p>
