@@ -8,6 +8,9 @@ const getProjectStatus = async ({ githubApi, command, say }) => {
   }
 
   const project = await githubApi.getProjectItems(projectQuery)
+  if (!project) {
+    return say({ text: `Desculpe, não encontrei nenhum projeto com o nome "${projectQuery}"` })
+  }
 
   let reply = statusQuery ? `Aqui estão os items \`${statusQuery}\` ` : 'Aqui estão todos os itens '
   reply += `que encontrei para *${project.title}*: \n\n`
