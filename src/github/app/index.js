@@ -2,6 +2,7 @@ const { mapKeys, camelCase } = require('lodash')
 const GithubApi = require('../../core/integrations/github')
 const { slackApp } = require('../../core/integrations/slack')
 const pulls = require('./pull-requests')
+const tasks = require('../tasks')
 
 function middleware (cb) {
   const slackApi = slackApp.client
@@ -32,7 +33,21 @@ module.exports = (app) => {
 
   app.on('pull_request.labeled', middleware(async context => {
     if (context.label.name === 'hotfix') {
-      await pulls.notifyHotfixToDevs(context)
+      await pulls.notifyHotfix(context)
+    }
+  }))
+
+  app.on('workflow_run.completed', middleware(async context => {
+    const { workflowRun } = context
+    const actionType = tasks.getActionType(workflowRun.name)
+
+    if (actionType === 'deploy' && workflowRun.conclusion === 'success') {
+      if (workflowRun.head_branch === 'master') {
+        await pulls.notifyDeploy(context)
+      }
+      if (workflowRun.head_branch === 'preview') {
+        await pulls.notifyPreviewUse(context)
+      }
     }
   }))
 

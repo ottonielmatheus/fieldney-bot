@@ -20,7 +20,7 @@ const middleware = (cb) => {
   }
 }
 
-slackApp.message('oi', middleware(async ({ message, say }) => {
+slackApp.message('oi fieldney', middleware(async ({ message, say }) => {
   await say({ text: 'Olá Fielder!' })
 }))
 

@@ -1,3 +1,5 @@
+const format = require('./../tools/formatter')
+
 class GitHub {
   constructor ({ org, owner, repository, octokit }) {
     this.owner = owner
@@ -136,6 +138,11 @@ class GitHub {
                     }
                     ... on Issue {
                       title
+                      labels (first: 5) {
+                        nodes {
+                          name
+                        }
+                      }
                       assignees (first: 5) {
                         nodes {
                           name
@@ -150,12 +157,6 @@ class GitHub {
                       description
                     }
                   }
-                  type: fieldValueByName (name: "Tipo") {
-                    ... on ProjectV2ItemFieldSingleSelectValue {
-                      name
-                      description
-                    }
-                  }
                 }
               }
             }
@@ -163,27 +164,25 @@ class GitHub {
         }
       }`, { org: this.org.login, projectQuery })
 
-    const project = organization.projectsV2.nodes[0]
+    const [project] = organization.projectsV2.nodes
     if (!project) {
       return null
     }
+    return format.project(project)
+  }
 
-    const getAssigneeName = (assignee) => assignee.name || assignee.login
-    return {
-      title: project.title,
-      items: project.items.nodes.map(item => ({
-        title: item.content.title,
-        status: {
-          value: item.status.name,
-          description: item.status.description
-        },
-        type: {
-          value: item.type?.name,
-          description: item.type?.description
-        },
-        assignees: item.content.assignees.nodes.map(getAssigneeName)
-      }))
-    }
+  async getProjects () {
+    const { organization } = await this.octokit.graphql(`
+      query ($org: String!) {
+        organization (login: $org) {
+          projectsV2 (first: 20) {
+            nodes {
+              title
+            }
+          }
+        }
+      }`, { org: this.org.login })
+    return organization.projectsV2.nodes
   }
 }
 

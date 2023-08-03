@@ -135,7 +135,7 @@ describe('Test "pull requests" events', () => {
             '(melhore esse texto: "Pull request description")\n' +
             '\n' +
             'E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.<END>',
-          model: 'text-davinci-002',
+          model: 'text-davinci-003',
           temperature: 1,
           max_tokens: 524,
           stop: '<END>'
@@ -285,7 +285,7 @@ describe('Test "pull requests" events', () => {
             '(melhore esse texto: "Pull request description")\n' +
             '\n' +
             'E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.<END>',
-          model: 'text-davinci-002',
+          model: 'text-davinci-003',
           temperature: 1,
           max_tokens: 524,
           stop: '<END>'

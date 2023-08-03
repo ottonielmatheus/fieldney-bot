@@ -2,10 +2,10 @@ const { Configuration, OpenAIApi } = require('openai')
 const config = require('./../config')
 
 class OpenAI {
-  constructor (model = 'text-davinci-002', temperature = 1, maxTokens = 524) {
+  constructor (model = 'text-davinci-003', temperature = 1, maxTokens = 524) {
     const configuration = new Configuration({
-      organization: config.openai.organization,
-      apiKey: config.openai.apiKey
+      apiKey: config.openai.apiKey,
+      organization: config.openai.organization
     })
 
     this.openai = new OpenAIApi(configuration)

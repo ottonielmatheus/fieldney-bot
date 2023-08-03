@@ -1,5 +1,5 @@
 const { groupBy } = require('lodash')
-const filterItemsByStatus = require('../tasks/filter-items-by-status')
+const tasks = require('./../tasks')
 
 const getProjectStatus = async ({ githubApi, command, say }) => {
   let [projectQuery, ...statusQuery] = command.text.split(' ')
@@ -9,32 +9,31 @@ const getProjectStatus = async ({ githubApi, command, say }) => {
 
   const project = await githubApi.getProjectItems(projectQuery)
   if (!project) {
-    return say({ text: `Desculpe, não encontrei nenhum projeto com o nome "${projectQuery}"` })
+    const projects = await githubApi.getProjects()
+
+    let reply = `Desculpe, não encontrei nenhum projeto com o nome _${projectQuery}_, mas você pode tentar alguns destes:\n\n`
+    reply += projects.map(project => `  • ${project.title}`).join('\n')
+
+    return say({ text: reply })
   }
 
-  let reply = statusQuery ? `Aqui estão os items \`${statusQuery}\` ` : 'Aqui estão todos os itens '
-  reply += `que encontrei para *${project.title}*: \n\n`
-
   const itemsByStatus = groupBy(project.items, 'status.value')
-  const filteredStatus = filterItemsByStatus(itemsByStatus, statusQuery)
+  const filteredStatus = tasks.filterItemsByStatus(itemsByStatus, statusQuery)
+
+  let reply = statusQuery ? `Aqui estão os items \`${statusQuery}\` ` : 'Aqui estão todos os itens '
+  reply += `que encontrei para _${project.title}_: \n\n`
 
   for (const status of filteredStatus) {
     reply += `*${status}:* \n\n`
 
     for (const item of itemsByStatus[status]) {
-      const type = {
-        bug: '🐛 Correção:',
-        fix: '🐛 Correção:',
-        hotfix: '🔥 Correção:',
-        feature: '🎸 Melhoria:',
-        refactor: '💡 Atualização:',
-        chore: '🤖 Atualização:'
-      }[item.type.value?.toLowerCase()] || ''
+      const type = tasks.getTypeEmoji(item.labels)
 
-      reply += '  -  '
-      reply += type ? `*${type}* ` : ''
+      reply += '  •  '
+      reply += type ? `*${type}*: ` : ''
       reply += `${item.title} `
-      reply += item.assignees.length ? `(${item.assignees.join(', ')})\n` : '\n'
+      reply += item.assignees.length ? `(${item.assignees.join(', ')})` : ''
+      reply += '\n'
     }
 
     reply += '\n\n'

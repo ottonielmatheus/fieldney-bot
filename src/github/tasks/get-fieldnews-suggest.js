@@ -22,11 +22,15 @@ module.exports = async (context, implementation, motivation, author) => {
 
     'E adicione um último tópico "Evoluções" apresentando as evoluções que essas implementações implicam.'
 
-  let suggestion = await openaiApi.execPrompt(prompt)
-  suggestion = 'Sugestão de Fieldnews \n' +
+  const suggestion = await openaiApi.execPrompt(prompt)
+  if (!suggestion) {
+    return 'Sugestão de Fieldnews \n' +
+      '------------ \n' +
+      `@${author.login}, não consegui montar um fieldnews para esse PR, meu cérebro parece não estar funcionando bem... 😵‍💫`
+  }
+
+  return 'Sugestão de Fieldnews \n' +
     '------------ \n' +
     `Salve **@${author.login}**! Aqui vai uma sugestão de Fieldnews quentinha que eu gerei pra você. 💙\n` +
     'Não se esqueça de revisar! 🚀 \n\n' + suggestion
-
-  return suggestion
 }

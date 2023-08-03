@@ -11,7 +11,7 @@ const suggestFieldnews = async ({ githubApi, repository, pullRequest }) => {
     const [firstClosedIssue] = await githubApi.getClosedIssuesNumberByPR(pullRequest.number)
     if (!firstClosedIssue) {
       return githubApi.addOrUpdatePRComment(pullRequest.number,
-        `Oi **@${pullRequest.user.login}**, vincula a issue que esse PR resolve que eu faço um fieldnews monstro pra você! 😉\n` +
+        `Oi ${pullRequest.user.login}, vincula a issue que esse PR resolve que eu faço um fieldnews monstro pra você! 😉\n` +
         'Só lembrando que caso esse PR resolva mais de uma issue, na hora de escrever o fieldnews,' +
         'eu irei considerar somente a primeira que foi vinculada, ok?'
       )
@@ -20,7 +20,7 @@ const suggestFieldnews = async ({ githubApi, repository, pullRequest }) => {
     const closedIssue = await githubApi.getIssue(firstClosedIssue.number)
     const { context, implementation, motivation } = getFieldnewsTopics(repository.description, pullRequest.body, closedIssue.body)
     if (!context || !implementation || !motivation) {
-      let missingItensComment = `**@${pullRequest.user.login}**, só ta faltando as seguintes informações para eu montar um fieldnews:\n\n`
+      let missingItensComment = `@${pullRequest.user.login}, só ta faltando as seguintes informações para eu montar um fieldnews:\n\n`
       if (!context) missingItensComment += ' - **Contexto**: A descrição desse repositório é o contexto, verifique se esse repositório possui uma\n'
       if (!implementation) missingItensComment += ' - **Implementações**: No PR, precisa ser informado dentro de `<implementation></implementation>`\n'
       if (!motivation) missingItensComment += ' - **Motivação**: Na issue que esse PR fecha, escreva logo no começo, e separe do resto por dois `enter`\n'
@@ -32,15 +32,33 @@ const suggestFieldnews = async ({ githubApi, repository, pullRequest }) => {
   }
 }
 
-const notifyHotfixToDevs = async ({ slackApi, repository, pullRequest }) => {
-  const author = pullRequest.user?.name || pullRequest.user.login
+const notifyHotfix = async ({ slackApi, repository, pullRequest }) => {
+  const author = pullRequest.user.name || pullRequest.user.login
   const message = `<!channel>, *${author}* acabou de subir uma *hotfix* para o *${repository.name}*, ` +
     'precisamos de review urgente! 🔥🚒\n' + pullRequest.html_url
+  await slackApi.chat.postMessage({ channel: 'developers', text: message })
+}
+
+const notifyDeploy = async ({ slackApi, repository, workflowRun }) => {
+  const [title] = workflowRun.head_commit.message.split('\n\n').reverse()
+  const author = workflowRun.triggering_actor.login
+
+  const message = `<!channel>, *${author}* acabou de publicar — *${title}*, vamos verificar se está tudo ok? 🚀`
+  await slackApi.chat.postMessage({ channel: 'suporte', text: message })
+}
+
+const notifyPreviewUse = async ({ slackApi, repository, workflowRun }) => {
+  const [title] = workflowRun.head_commit.message.split('\n\n').reverse()
+  const author = workflowRun.triggering_actor.login
+
+  const message = `<!channel>, *${author}* está usando \`preview\` de *${repository.name}* para testar — ${title}! 👷`
   await slackApi.chat.postMessage({ channel: 'developers', text: message })
 }
 
 module.exports = {
   requestReviewAndAssignAuthor,
   suggestFieldnews,
-  notifyHotfixToDevs
+  notifyHotfix,
+  notifyDeploy,
+  notifyPreviewUse
 }
