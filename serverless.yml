@@ -18,6 +18,8 @@ provider:
       SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
       INSTALLATION_ID: ${env:INSTALLATION_ID}
       GH_ORG_NAME: ${env:GH_ORG_NAME}
+      MONGODB_URI: ${env:MONGODB_URI}
+      MONGODB_DB_NAME: ${env:MONGODB_DB_NAME}
       LOG_FORMAT: json
 
 functions:
