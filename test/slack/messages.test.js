@@ -6,7 +6,7 @@ describe('Test slack events', () => {
     nock.disableNetConnect()
   })
 
-  test('on "oi" message', async () => {
+  test('on "oi @fieldney" message', async () => {
   })
 
   afterEach(async () => {

@@ -39,26 +39,26 @@ const notifyHotfix = async ({ slackApi, repository, pullRequest }) => {
   await slackApi.chat.postMessage({ channel: 'developers', text: message })
 }
 
-const notifyDeploy = async ({ slackApi, repository, workflowRun }) => {
-  const [title] = workflowRun.head_commit.message.split('\n\n').reverse()
-  const author = workflowRun.triggering_actor.login
-
-  const message = `<!channel>, *${author}* acabou de publicar — *${title}*, vamos verificar se está tudo ok? 🚀`
-  await slackApi.chat.postMessage({ channel: 'suporte', text: message })
+const notifyReadyForMerge = async ({ db, slackApi, pullRequest }) => {
+  const user = await db.collection('users').findOne({ github_login: pullRequest.user.login })
+  if (user) {
+    const message = `Seu PR — *${pullRequest.title}* está pronto para ser publicado. 🚀\n` + pullRequest.html_url
+    await slackApi.chat.postMessage({ channel: user.slack_id, text: message })
+  }
 }
 
-const notifyPreviewUse = async ({ slackApi, repository, workflowRun }) => {
-  const [title] = workflowRun.head_commit.message.split('\n\n').reverse()
-  const author = workflowRun.triggering_actor.login
-
-  const message = `<!channel>, *${author}* está usando \`preview\` de *${repository.name}* para testar — ${title}! 👷`
-  await slackApi.chat.postMessage({ channel: 'developers', text: message })
+const notifyReproved = async ({ db, slackApi, review, pullRequest }) => {
+  const user = await db.collection('users').findOne({ github_login: pullRequest.user.login })
+  if (user) {
+    const message = `Seu PR — *${pullRequest.title}* foi reprovado por *${review.user.login}*.\n` + pullRequest.html_url
+    await slackApi.chat.postMessage({ channel: user.slack_id, text: message })
+  }
 }
 
 module.exports = {
   requestReviewAndAssignAuthor,
   suggestFieldnews,
   notifyHotfix,
-  notifyDeploy,
-  notifyPreviewUse
+  notifyReadyForMerge,
+  notifyReproved
 }

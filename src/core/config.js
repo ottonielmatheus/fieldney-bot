@@ -15,5 +15,11 @@ module.exports = {
   slack: {
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET
+  },
+  databases: {
+    mongodb: {
+      uri: process.env.MONGODB_URI,
+      dbName: process.env.MONGODB_DB_NAME
+    }
   }
 }

@@ -1,23 +1,27 @@
 const { mapKeys, camelCase } = require('lodash')
+const mongodb = require('../../core/database/mongodb')
 const GithubApi = require('../../core/integrations/github')
 const { slackApp } = require('../../core/integrations/slack')
+const workflows = require('./workflows')
 const pulls = require('./pull-requests')
 const tasks = require('../tasks')
 
 function middleware (cb) {
   const slackApi = slackApp.client
 
-  return (context) => {
-    const { organization, repository } = context.payload
-    const githubApi = new GithubApi({
-      org: organization,
-      owner: repository.owner,
-      octokit: context.octokit,
-      repository
+  return async (context) => {
+    return await mongodb.tx(async (db) => {
+      const { organization, repository } = context.payload
+      const githubApi = new GithubApi({
+        org: organization,
+        owner: repository.owner,
+        octokit: context.octokit,
+        repository
+      })
+      const payload = mapKeys(context.payload, (val, key) => camelCase(key))
+      context = { db, slackApi, githubApi, ...payload }
+      return await cb(context)
     })
-    const payload = mapKeys(context.payload, (val, key) => camelCase(key))
-    context = { slackApi, githubApi, ...payload }
-    return cb(context)
   }
 }
 
@@ -37,16 +41,26 @@ module.exports = (app) => {
     }
   }))
 
+  app.on('pull_request_review.submitted', middleware(async context => {
+    if (context.pullRequest.mergeable) {
+      await pulls.notifyReadyForMerge(context)
+    }
+    if (context.review.state === 'changes_requested') {
+      await pulls.notifyReproved(context)
+    }
+  }))
+
   app.on('workflow_run.completed', middleware(async context => {
     const { workflowRun } = context
     const actionType = tasks.getActionType(workflowRun.name)
 
     if (actionType === 'deploy' && workflowRun.conclusion === 'success') {
       if (workflowRun.head_branch === 'master') {
-        await pulls.notifyDeploy(context)
+        await workflows.notifyDeployToAuthor(context)
+        await workflows.notifyDeployToChannel(context)
       }
       if (workflowRun.head_branch === 'preview') {
-        await pulls.notifyPreviewUse(context)
+        await workflows.notifyPreviewUseToChannel(context)
       }
     }
   }))

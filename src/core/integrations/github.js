@@ -184,6 +184,11 @@ class GitHub {
       }`, { org: this.org.login })
     return organization.projectsV2.nodes
   }
+
+  async getCommit (commitRef) {
+    const { data } = await this.octokit.repos.getCommit({ owner: this.owner.login, repo: this.repo.name, ref: commitRef })
+    return data
+  }
 }
 
 module.exports = GitHub

@@ -42,6 +42,42 @@ const getProjectStatus = async ({ githubApi, command, say }) => {
   await say({ text: reply })
 }
 
+const assignAccount = async ({ db, command, say }) => {
+  const [id, platform] = command.text.split(' ')
+
+  let platformId = null
+  if (platform === 'github') {
+    platformId = { github_login: id }
+  }
+
+  if (platformId) {
+    const user = await db.collection('users').findOne({ slack_id: command.user_id })
+    if (user) {
+      await db.collection('users').findOneAndUpdate({ slack_id: command.user_id }, { $set: platformId })
+    } else {
+      await db.collection('users').insertOne({ slack_id: command.user_id, ...platformId })
+    }
+    return say({ text: `Legal, agora você é *${id}* no *${platform}*. 🔗` })
+  }
+  await say({ text: `Não conheço a plataforma *${platform}*, você escreveu corretamente?` })
+}
+
+const showLinkedAccounts = async ({ db, command, say }) => {
+  const user = await db.collection('users').findOne({ slack_id: command.user_id })
+
+  if (user) {
+    let reply = 'Você está vinculado com as seguintes contas: \n\n'
+    if (user.github_login) {
+      reply += `  • 🐙 *github*: ${user.github_login} \n`
+    }
+    return say({ text: reply })
+  }
+
+  await say({ text: 'Você não está linkado com nenhuma conta, use `/iam` para vincular sua conta a uma plataforma.' })
+}
+
 module.exports = {
-  getProjectStatus
+  getProjectStatus,
+  assignAccount,
+  showLinkedAccounts
 }
