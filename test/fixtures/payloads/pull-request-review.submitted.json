@@ -1,0 +1,51 @@
+{
+  "action": "submitted",
+  "repository": {
+    "description": "Repository description",
+    "owner": {
+      "login": "ottonielmatheus"
+    },
+    "name": "fieldney-bot"
+  },
+  "organization": {
+    "login":"this-is-just-a-test-org",
+    "id":140672598,
+    "node_id":"O_kgDOCGJ-Vg"
+  },
+  "review": {
+    "id": 80,
+    "node_id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3ODA=",
+    "user": {
+      "login": "octocat",
+      "id": 1,
+      "node_id": "MDQ6VXNlcjE=",
+      "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+      "gravatar_id": "",
+      "type": "User",
+      "site_admin": false
+    },
+    "body": "Here is the body for the review.",
+    "state": "changes_requested",
+    "html_url": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-80",
+    "_links": {
+      "html": {
+        "href": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-80"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/octocat/Hello-World/pulls/12"
+      }
+    },
+    "submitted_at": "2019-11-17T17:43:43Z",
+    "commit_id": "ecdd80bb57125d7ba9641ffaa4d7d2c19d3f3091",
+    "author_association": "COLLABORATOR"
+  },
+  "pull_request": {
+    "number": 9,
+    "body": "<implementation>Pull request description</implementation>",
+    "mergeable": true,
+    "user": {
+      "login": "ottonielmatheus"
+    },
+    "html_url": "https://github.com/this-is-just-a-test-org/test-repo/pull/9"
+  }
+}

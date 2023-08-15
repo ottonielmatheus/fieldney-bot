@@ -20,6 +20,10 @@ provider:
       GH_ORG_NAME: ${env:GH_ORG_NAME}
       MONGODB_URI: ${env:MONGODB_URI}
       MONGODB_DB_NAME: ${env:MONGODB_DB_NAME}
+      TRELLO_API_TOKEN: ${env:TRELLO_API_TOKEN}
+      TRELLO_API_KEY: ${env:TRELLO_API_KEY}
+      TRELLO_SECRET: ${env:TRELLO_SECRET}
+      ENVIRONMENT: ${opt:stage, 'dev'}
       LOG_FORMAT: json
 
 functions:
@@ -40,6 +44,15 @@ functions:
       - http:
           path: hooks/slack
           method: post
+
+  trello:
+    handler: index.trello
+    description: trello fieldney-bot webhook
+
+    events:
+      - http:
+          path: hooks/trello
+          method: any
 
 plugins:
   - serverless-offline

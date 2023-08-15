@@ -1,11 +1,23 @@
+const { ProbotOctokit } = require('probot')
+const config = require('../config')
 const format = require('./../tools/formatter')
 
 class GitHub {
   constructor ({ org, owner, repository, octokit }) {
-    this.owner = owner
+    this.org = org || { login: config.github.orgName }
+    this.owner = owner || { login: config.github.orgName }
     this.repo = repository
-    this.org = org
     this.octokit = octokit
+
+    if (!this.octokit) {
+      this.octokit = new ProbotOctokit({
+        auth: {
+          appId: config.github.appId,
+          installationId: config.github.installationId,
+          privateKey: Buffer.from(config.github.privateKey, 'base64').toString()
+        }
+      })
+    }
   }
 
   async getClosedIssuesNumberByPR (prNumber) {
@@ -188,6 +200,17 @@ class GitHub {
   async getCommit (commitRef) {
     const { data } = await this.octokit.repos.getCommit({ owner: this.owner.login, repo: this.repo.name, ref: commitRef })
     return data
+  }
+
+  async createBranchFrom (repo, fromBranch, newBranchName) {
+    const { data } = await this.octokit.repos.getBranch({ owner: this.owner.login, repo, branch: fromBranch })
+    const { data: newBranch } = await this.octokit.git.createRef({
+      owner: this.owner.login,
+      repo,
+      ref: `refs/heads/${newBranchName}`,
+      sha: data.commit.sha
+    })
+    return newBranch
   }
 }
 

@@ -1,6 +1,6 @@
 node_modules/
+.env.prod
 .env.dev
-.env
 private-key.pem
 .serverless/
 todo.md

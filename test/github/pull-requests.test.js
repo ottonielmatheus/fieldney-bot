@@ -1,6 +1,6 @@
 const nock = require('nock')
-const app = require('../../src/github/app')
 const { Probot, ProbotOctokit } = require('probot')
+const app = require('../../src/github/app')
 const payload = require('../fixtures/payloads/pull-requests.opened.json')
 const labeledPayload = require('../fixtures/payloads/pull-requests.labeled.json')
 const orgTeamsResponse = require('../fixtures/responses/org-teams.json')

@@ -1,20 +1,10 @@
 const mongodb = require('./../../core/database/mongodb')
 const GitHubApi = require('./../../core/integrations/github')
-const { ProbotOctokit } = require('probot')
-const config = require('./../../core/config')
 const { slackApp, awsLambdaReceiver } = require('../../core/integrations/slack')
 const commands = require('./commands')
 
 const middleware = (cb) => {
-  const octokit = new ProbotOctokit({
-    auth: {
-      appId: config.github.appId,
-      installationId: config.github.installationId,
-      privateKey: Buffer.from(config.github.privateKey, 'base64').toString()
-    }
-  })
-  const githubApi = new GitHubApi({ org: { login: config.github.orgName }, octokit })
-
+  const githubApi = new GitHubApi({})
   return async (context) => {
     return await mongodb.tx(async (db) => {
       context.db = db
