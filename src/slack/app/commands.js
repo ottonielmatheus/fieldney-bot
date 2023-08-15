@@ -51,11 +51,11 @@ const assignAccount = async ({ db, command, say }) => {
   }
 
   if (platformId) {
-    const user = await db.collection('users').findOne({ slack_id: command.user_id })
+    const user = await db.table('users').read({ slack_id: command.user_id })
     if (user) {
-      await db.collection('users').findOneAndUpdate({ slack_id: command.user_id }, { $set: platformId })
+      await db.table('users').update(platformId, { slack_id: command.user_id })
     } else {
-      await db.collection('users').insertOne({ slack_id: command.user_id, ...platformId })
+      await db.table('users').write({ slack_id: command.user_id, ...platformId })
     }
     return say({ text: `Legal, agora você é *${id}* no *${platform}*. 🔗` })
   }
@@ -63,7 +63,7 @@ const assignAccount = async ({ db, command, say }) => {
 }
 
 const showLinkedAccounts = async ({ db, command, say }) => {
-  const user = await db.collection('users').findOne({ slack_id: command.user_id })
+  const user = await db.table('users').read({ slack_id: command.user_id })
 
   if (user) {
     let reply = 'Você está vinculado com as seguintes contas: \n\n'

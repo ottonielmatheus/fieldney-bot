@@ -1,4 +1,4 @@
-const mongodb = require('./../../core/database/mongodb')
+const db = require('../../core/database/dynamodb')
 const GitHubApi = require('./../../core/integrations/github')
 const { slackApp, awsLambdaReceiver } = require('../../core/integrations/slack')
 const commands = require('./commands')
@@ -6,11 +6,9 @@ const commands = require('./commands')
 const middleware = (cb) => {
   const githubApi = new GitHubApi({})
   return async (context) => {
-    return await mongodb.tx(async (db) => {
-      context.db = db
-      context.githubApi = githubApi
-      return await cb(context)
-    })
+    context.db = db
+    context.githubApi = githubApi
+    return await cb(context)
   }
 }
 

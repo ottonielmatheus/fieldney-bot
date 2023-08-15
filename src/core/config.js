@@ -4,11 +4,11 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env.' + environ
 
 module.exports = {
   github: {
-    appId: process.env.APP_ID,
-    privateKey: process.env.PRIVATE_KEY,
-    webhookSecret: process.env.WEBHOOK_SECRET,
-    installationId: process.env.INSTALLATION_ID,
-    orgName: process.env.GH_ORG_NAME
+    appId: process.env.GITHUB_APP_ID,
+    privateKey: process.env.GITHUB_PRIVATE_KEY,
+    webhookSecret: process.env.GITHUB_WEBHOOK_SECRET,
+    installationId: process.env.GITHUB_INSTALLATION_ID,
+    orgName: process.env.GITHUB_ORG_NAME
   },
   openai: {
     apiKey: process.env.OPENAI_API_KEY,
@@ -23,10 +23,11 @@ module.exports = {
     token: process.env.TRELLO_API_TOKEN,
     secret: process.env.TRELLO_SECRET
   },
-  databases: {
-    mongodb: {
-      uri: process.env.MONGODB_URI,
-      dbName: process.env.MONGODB_DB_NAME
-    }
-  }
+  aws: {
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    endpoint: environment !== 'prod' ? process.env.AWS_ENDPOINT : null
+  },
+  env: environment
 }

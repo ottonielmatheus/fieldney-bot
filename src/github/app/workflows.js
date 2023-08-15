@@ -18,7 +18,7 @@ const notifyDeployToAuthor = async ({ db, slackApi, githubApi, workflowRun }) =>
   const [title] = workflowRun.head_commit.message.split('\n\n').reverse()
   const commit = await githubApi.getCommit(workflowRun.head_sha)
 
-  const user = await db.collection('users').findOne({ github_login: commit.author.login })
+  const user = await db.table('users').read({ github_login: commit.author.login })
   if (user) {
     const message = `Seu PR — *${title}* acabou de ser publicado, bora verificar se está tudo ok? 💙`
     await slackApi.chat.postMessage({ channel: user.slack_id, text: message })

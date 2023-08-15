@@ -40,7 +40,7 @@ const notifyHotfix = async ({ slackApi, repository, pullRequest }) => {
 }
 
 const notifyReadyForMerge = async ({ db, slackApi, pullRequest }) => {
-  const user = await db.collection('users').findOne({ github_login: pullRequest.user.login })
+  const user = await db.table('users').read({ github_login: pullRequest.user.login })
   if (user) {
     const message = `Seu PR — *${pullRequest.title}* está pronto para ser publicado. 🚀\n` + pullRequest.html_url
     await slackApi.chat.postMessage({ channel: user.slack_id, text: message })
@@ -48,7 +48,7 @@ const notifyReadyForMerge = async ({ db, slackApi, pullRequest }) => {
 }
 
 const notifyReproved = async ({ db, slackApi, review, pullRequest }) => {
-  const user = await db.collection('users').findOne({ github_login: pullRequest.user.login })
+  const user = await db.table('users').read({ github_login: pullRequest.user.login })
   if (user) {
     const message = `Seu PR — *${pullRequest.title}* foi reprovado por *${review.user.login}*.\n` + pullRequest.html_url
     await slackApi.chat.postMessage({ channel: user.slack_id, text: message })
